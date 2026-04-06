@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VDTOR — Advanced Pro Video Editor</title>
+  <meta name="description" content="VDTOR is a professional browser-based video editor with advanced VFX, color grading, transitions, audio mixing, and multi-track timeline editing." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===== SPLASH SCREEN ===== -->
+<div id="splash-screen">
+  <div class="splash-content">
+    <div class="splash-logo">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+        <defs>
+          <linearGradient id="logoGrad" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#7c3aed"/>
+            <stop offset="100%" stop-color="#06b6d4"/>
+          </linearGradient>
+        </defs>
+        <rect width="72" height="72" rx="18" fill="url(#logoGrad)"/>
+        <polygon points="28,20 28,52 56,36" fill="white" opacity="0.95"/>
+        <rect x="16" y="20" width="6" height="32" rx="3" fill="white" opacity="0.6"/>
+      </svg>
+    </div>
+    <h1 class="splash-title">VDTOR</h1>
+    <p class="splash-sub">Advanced Pro Video Editor</p>
+    <div class="splash-loader">
+      <div class="splash-progress-track">
+        <div class="splash-progress-bar" id="splash-progress"></div>
+      </div>
+      <span class="splash-status" id="splash-status">Initializing engine…</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="app" style="display:none">
+
+  <!-- MENU BAR -->
+  <header id="menu-bar">
+    <div class="menu-left">
+      <div class="app-logo">
+        <svg width="26" height="26" viewBox="0 0 72 72" fill="none">
+          <defs>
+            <linearGradient id="logoGrad2" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="100%" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+          <rect width="72" height="72" rx="14" fill="url(#logoGrad2)"/>
+          <polygon points="28,20 28,52 56,36" fill="white" opacity="0.95"/>
+          <rect x="16" y="20" width="6" height="32" rx="3" fill="white" opacity="0.6"/>
+        </svg>
+        <span>VDTOR</span>
+      </div>
+      <nav class="menu-nav">
+        <div class="menu-item" id="menu-file">
+          File
+          <div class="dropdown" id="dd-file">
+            <div class="dd-item" id="btn-new-project">New Project</div>
+            <div class="dd-item" id="btn-open-project">Open Project…</div>
+            <div class="dd-item" id="btn-save-project">Save Project</div>
+            <div class="dd-sep"></div>
+            <div class="dd-item" id="btn-import-media">Import Media…</div>
+            <div class="dd-sep"></div>
+            <div class="dd-item" id="btn-export">Export Video…</div>
+          </div>
+        </div>
+        <div class="menu-item" id="menu-edit">
+          Edit
+          <div class="dropdown" id="dd-edit">
+            <div class="dd-item" id="btn-undo">Undo <span class="dd-shortcut">⌘Z</span></div>
+            <div class="dd-item" id="btn-redo">Redo <span class="dd-shortcut">⌘Y</span></div>
+            <div class="dd-sep"></div>
+            <div class="dd-item" id="btn-cut-clip">Cut Clip <span class="dd-shortcut">S</span></div>
+            <div class="dd-item" id="btn-delete-clip">Delete Clip <span class="dd-shortcut">Del</span></div>
+            <div class="dd-sep"></div>
+            <div class="dd-item" id="btn-select-all">Select All <span class="dd-shortcut">⌘A</span></div>
+          </div>
+        </div>
+        <div class="menu-item" id="menu-view">
+          View
+          <div class="dropdown" id="dd-view">
+            <div class="dd-item" id="btn-panel-effects">Effects Panel</div>
+            <div class="dd-item" id="btn-panel-color">Color Grading</div>
+            <div class="dd-item" id="btn-panel-audio">Audio Mixer</div>
+            <div class="dd-item" id="btn-panel-text">Text & Titles</div>
+            <div class="dd-sep"></div>
+            <div class="dd-item" id="btn-fullscreen-preview">Fullscreen Preview <span class="dd-shortcut">F</span></div>
+          </div>
+        </div>
+        <div class="menu-item" id="menu-effects">
+          Effects
+          <div class="dropdown" id="dd-effects">
+            <div class="dd-item dd-subhead">Color & Light</div>
+            <div class="dd-item effect-add" data-effect="brightness">Brightness / Contrast</div>
+            <div class="dd-item effect-add" data-effect="saturation">Saturation / Hue</div>
+            <div class="dd-item effect-add" data-effect="vignette">Vignette</div>
+            <div class="dd-item effect-add" data-effect="bloom">Bloom / Glow</div>
+            <div class="dd-sep"></div>
+            <div class="dd-item dd-subhead">Stylistic VFX</div>
+            <div class="dd-item effect-add" data-effect="filmgrain">Film Grain</div>
+            <div class="dd-item effect-add" data-effect="chromatic">Chromatic Aberration</div>
+            <div class="dd-item effect-add" data-effect="glitch">Glitch</div>
+            <div class="dd-item effect-add" data-effect="vhs">VHS / Retro</div>
+            <div class="dd-item effect-add" data-effect="neon">Neon Glow</div>
+            <div class="dd-sep"></div>
+            <div class="dd-item dd-subhead">Blur & Distortion</div>
+            <div class="dd-item effect-add" data-effect="blur">Gaussian Blur</div>
+            <div class="dd-item effect-add" data-effect="motionblur">Motion Blur</div>
+            <div class="dd-item effect-add" data-effect="pixelate">Pixelate</div>
+            <div class="dd-item effect-add" data-effect="fisheye">Fisheye</div>
+          </div>
+        </div>
+        <div class="menu-item" id="menu-export-btn">
+          Export
+          <div class="dropdown" id="dd-export">
+            <div class="dd-item export-preset" data-preset="youtube">YouTube 1080p</div>
+            <div class="dd-item export-preset" data-preset="youtube4k">YouTube 4K</div>
+            <div class="dd-item export-preset" data-preset="instagram">Instagram (1:1)</div>
+            <div class="dd-item export-preset" data-preset="tiktok">TikTok (9:16)</div>
+            <div class="dd-item export-preset" data-preset="twitter">Twitter / X</div>
+            <div class="dd-sep"></div>
+            <div class="dd-item" id="btn-custom-export">Custom Export…</div>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="menu-center">
+      <div class="timecode" id="timecode-display">00:00:00:00</div>
+    </div>
+    <div class="menu-right">
+      <div class="toolbar-tools">
+        <button class="tool-btn active" id="tool-select" title="Select (V)">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 2l5 12 2-4 4-2z" fill="currentColor"/></svg>
+        </button>
+        <button class="tool-btn" id="tool-razor" title="Razor / Split (S)">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 14L14 2M8 8L14 12M8 8L2 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="tool-btn" id="tool-text" title="Text (T)">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 3h12M8 3v10M5 13h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="tool-btn" id="tool-hand" title="Pan (H)">
+          <svg width="16" height="16" viewBox="0 0 16 16"><path d="M6 2v6M6 2c0-1 2-1 2 0v4M8 2c0-1 2-1 2 1v3M10 3c0-1 2-1 2 1v4L12 12c0 2-2 3-4 3H7c-2 0-3-1-3-3V8L4 6c0-1 .5-1.5 1-1.5S6 5 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>
+        </button>
+      </div>
+      <div class="toolbar-sep"></div>
+      <button class="btn-export-top" id="btn-export-top">
+        <svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 1v9M4 6l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        Export
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main id="workspace">
+
+    <!-- LEFT: MEDIA BIN -->
+    <aside id="panel-media" class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Media Bin</span>
+        <div class="panel-tabs">
+          <button class="ptab active" data-tab="media-files">Files</button>
+          <button class="ptab" data-tab="media-effects">FX Library</button>
+          <button class="ptab" data-tab="media-transitions">Transitions</button>
+        </div>
+      </div>
+
+      <!-- Files Tab -->
+      <div class="panel-tab-content active" id="media-files">
+        <div id="media-drop-zone" class="drop-zone">
+          <div class="drop-zone-inner">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
+            </svg>
+            <p>Drop media here</p>
+            <span>or</span>
+            <button class="btn-ghost" id="btn-browse-media">Browse Files</button>
+            <input type="file" id="file-input" multiple accept="video/*,audio/*,image/*" style="display:none"/>
+          </div>
+        </div>
+        <div id="media-grid" class="media-grid"></div>
+      </div>
+
+      <!-- FX Library Tab -->
+      <div class="panel-tab-content" id="media-effects">
+        <div class="fx-search">
+          <input type="text" placeholder="Search effects…" id="fx-search-input" />
+        </div>
+        <div class="fx-list" id="fx-library-list">
+          <div class="fx-category">Color & Light</div>
+          <div class="fx-item" draggable="true" data-effect="brightness">🔆 Brightness / Contrast</div>
+          <div class="fx-item" draggable="true" data-effect="saturation">🎨 Saturation / Hue</div>
+          <div class="fx-item" draggable="true" data-effect="exposure">☀️ Exposure</div>
+          <div class="fx-item" draggable="true" data-effect="vignette">⭕ Vignette</div>
+          <div class="fx-item" draggable="true" data-effect="bloom">✨ Bloom / Glow</div>
+          <div class="fx-item" draggable="true" data-effect="lensflare">💡 Lens Flare</div>
+          <div class="fx-category">Stylistic VFX</div>
+          <div class="fx-item" draggable="true" data-effect="filmgrain">🎞️ Film Grain</div>
+          <div class="fx-item" draggable="true" data-effect="chromatic">🔴 Chromatic Aberration</div>
+          <div class="fx-item" draggable="true" data-effect="glitch">📺 Glitch</div>
+          <div class="fx-item" draggable="true" data-effect="vhs">📼 VHS / Retro</div>
+          <div class="fx-item" draggable="true" data-effect="neon">🌟 Neon Glow</div>
+          <div class="fx-item" draggable="true" data-effect="duotone">🎭 Duotone</div>
+          <div class="fx-item" draggable="true" data-effect="bw">⚫ Black & White</div>
+          <div class="fx-category">Blur & Distortion</div>
+          <div class="fx-item" draggable="true" data-effect="blur">🌫️ Gaussian Blur</div>
+          <div class="fx-item" draggable="true" data-effect="motionblur">💨 Motion Blur</div>
+          <div class="fx-item" draggable="true" data-effect="radialblur">🌀 Radial Blur</div>
+          <div class="fx-item" draggable="true" data-effect="pixelate">🔲 Pixelate</div>
+          <div class="fx-item" draggable="true" data-effect="fisheye">🐟 Fisheye</div>
+          <div class="fx-item" draggable="true" data-effect="mirror">🪞 Mirror</div>
+          <div class="fx-item" draggable="true" data-effect="wavewarp">〰️ Wave Warp</div>
+          <div class="fx-item" draggable="true" data-effect="sharpen">🔍 Sharpen</div>
+        </div>
+      </div>
+
+      <!-- Transitions Tab -->
+      <div class="panel-tab-content" id="media-transitions">
+        <div class="fx-list" id="transitions-list">
+          <div class="fx-category">Basic</div>
+          <div class="tr-item" draggable="true" data-transition="cut">✂️ Cut</div>
+          <div class="tr-item" draggable="true" data-transition="dissolve">🌫️ Dissolve</div>
+          <div class="tr-item" draggable="true" data-transition="fade">⬛ Fade to Black</div>
+          <div class="tr-item" draggable="true" data-transition="fadewhite">⬜ Fade to White</div>
+          <div class="fx-category">Wipes</div>
+          <div class="tr-item" draggable="true" data-transition="wipeleft">◀️ Wipe Left</div>
+          <div class="tr-item" draggable="true" data-transition="wiperight">▶️ Wipe Right</div>
+          <div class="tr-item" draggable="true" data-transition="wipeup">🔼 Wipe Up</div>
+          <div class="tr-item" draggable="true" data-transition="wipedown">🔽 Wipe Down</div>
+          <div class="fx-category">Dynamic</div>
+          <div class="tr-item" draggable="true" data-transition="zoomin">🔍 Zoom In</div>
+          <div class="tr-item" draggable="true" data-transition="zoomout">🔎 Zoom Out</div>
+          <div class="tr-item" draggable="true" data-transition="spin">🌀 Spin</div>
+          <div class="tr-item" draggable="true" data-transition="whippan">💨 Whip Pan</div>
+          <div class="fx-category">VFX</div>
+          <div class="tr-item" draggable="true" data-transition="glitch">⚡ Glitch</div>
+          <div class="tr-item" draggable="true" data-transition="filmburn">🔥 Film Burn</div>
+          <div class="tr-item" draggable="true" data-transition="lightleak">💛 Light Leak</div>
+          <div class="tr-item" draggable="true" data-transition="pixeldissolve">🔲 Pixel Dissolve</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RESIZE HANDLE -->
+    <div class="resize-handle" id="resize-media-preview" data-direction="horizontal"></div>
+
+    <!-- CENTER: VIDEO PREVIEW -->
+    <section id="panel-preview" class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Preview</span>
+        <div class="preview-res-btns">
+          <button class="res-btn active" data-res="1">Full</button>
+          <button class="res-btn" data-res="0.5">1/2</button>
+          <button class="res-btn" data-res="0.25">1/4</button>
+        </div>
+        <div class="preview-overlay-btns">
+          <button class="icon-btn" id="btn-safe-area" title="Safe Area">
+            <svg width="14" height="14" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="4" y="4" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1" stroke-dasharray="2,1" fill="none"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="preview-container">
+        <canvas id="preview-canvas"></canvas>
+        <video id="preview-video" style="display:none"></video>
+        <div id="preview-overlay"></div>
+        <div id="safe-area-overlay" style="display:none"></div>
+        <!-- Text overlay compositor -->
+        <canvas id="text-canvas" style="position:absolute;top:0;left:0;pointer-events:none;"></canvas>
+      </div>
+      <div id="playback-controls">
+        <div class="playback-time">
+          <span id="current-time-display">0:00:00</span>
+          <span class="time-sep">/</span>
+          <span id="duration-display">0:00:00</span>
+        </div>
+        <div class="playback-center">
+          <button class="pb-btn" id="btn-skip-start" title="Go to Start">
+            <svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 2v12M13 3L6 8l7 5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </button>
+          <button class="pb-btn" id="btn-step-back" title="Step Back (J)">
+            <svg width="16" height="16" viewBox="0 0 16 16"><path d="M9 3L2 8l7 5zM14 3L7 8l7 5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </button>
+          <button class="pb-btn pb-play" id="btn-play-pause" title="Play / Pause (Space)">
+            <svg id="play-icon" width="20" height="20" viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14" fill="currentColor"/></svg>
+            <svg id="pause-icon" width="20" height="20" viewBox="0 0 16 16" style="display:none"><rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor"/><rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor"/></svg>
+          </button>
+          <button class="pb-btn" id="btn-step-fwd" title="Step Forward (L)">
+            <svg width="16" height="16" viewBox="0 0 16 16"><path d="M7 3l7 5-7 5zM2 3l7 5-7 5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </button>
+          <button class="pb-btn" id="btn-skip-end" title="Go to End">
+            <svg width="16" height="16" viewBox="0 0 16 16"><path d="M13 2v12M3 3l7 5-7 5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </button>
+          <button class="pb-btn" id="btn-loop" title="Loop">
+            <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 8a6 6 0 0112 0M14 8l-2-2M4 10l2 2-2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          </button>
+        </div>
+        <div class="playback-right">
+          <div class="volume-ctrl">
+            <svg width="14" height="14" viewBox="0 0 16 16"><path d="M3 6H1v4h2l4 3V3L3 6zM11 5a4 4 0 010 6M13 3a7 7 0 010 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+            <input type="range" id="master-volume" min="0" max="100" value="100" />
+          </div>
+          <button class="pb-btn" id="btn-fullscreen" title="Fullscreen (F)">
+            <svg width="14" height="14" viewBox="0 0 16 16"><path d="M1 1h5M1 1v5M15 1h-5M15 1v5M1 15h5M1 15v-5M15 15h-5M15 15v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESIZE HANDLE -->
+    <div class="resize-handle" id="resize-preview-inspector" data-direction="horizontal"></div>
+
+    <!-- RIGHT: INSPECTOR PANEL -->
+    <aside id="panel-inspector" class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Inspector</span>
+        <div class="panel-tabs">
+          <button class="ptab active" data-tab="insp-effects">Effects</button>
+          <button class="ptab" data-tab="insp-color">Color</button>
+          <button class="ptab" data-tab="insp-audio-mix">Audio</button>
+          <button class="ptab" data-tab="insp-text">Text</button>
+          <button class="ptab ck-tab-btn" data-tab="insp-chroma">🎭 Key</button>
+        </div>
+      </div>
+
+      <!-- Effects Inspector -->
+      <div class="panel-tab-content active" id="insp-effects">
+        <div class="insp-no-clip" id="effects-no-clip">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.4"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          <p>Select a clip to view & edit effects</p>
+        </div>
+        <div id="effects-stack" style="display:none">
+          <div class="insp-section-header">
+            <span>Applied Effects</span>
+            <button class="btn-ghost-sm" id="btn-add-effect">+ Add</button>
+          </div>
+          <div id="effects-list"></div>
+          <div class="insp-section-header" style="margin-top:12px">
+            <span>Clip Properties</span>
+          </div>
+          <div id="clip-properties">
+            <div class="prop-row">
+              <label>Opacity</label>
+              <input type="range" class="prop-slider" id="prop-opacity" min="0" max="100" value="100"/>
+              <span class="prop-val" id="prop-opacity-val">100%</span>
+            </div>
+            <div class="prop-row">
+              <label>Speed</label>
+              <input type="range" class="prop-slider" id="prop-speed" min="10" max="400" value="100"/>
+              <span class="prop-val" id="prop-speed-val">1.0x</span>
+            </div>
+            <div class="prop-row">
+              <label>Scale</label>
+              <input type="range" class="prop-slider" id="prop-scale" min="50" max="300" value="100"/>
+              <span class="prop-val" id="prop-scale-val">100%</span>
+            </div>
+            <div class="prop-row">
+              <label>Rotate</label>
+              <input type="range" class="prop-slider" id="prop-rotation" min="-180" max="180" value="0"/>
+              <span class="prop-val" id="prop-rotation-val">0°</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Color Grading Inspector -->
+      <div class="panel-tab-content" id="insp-color">
+        <div class="color-grade-panel">
+          <div class="insp-section-header">Wheels</div>
+          <div class="color-wheels-row">
+            <div class="color-wheel-wrap">
+              <canvas class="color-wheel" id="cw-lift" width="90" height="90"></canvas>
+              <span>Lift</span>
+            </div>
+            <div class="color-wheel-wrap">
+              <canvas class="color-wheel" id="cw-gamma" width="90" height="90"></canvas>
+              <span>Gamma</span>
+            </div>
+            <div class="color-wheel-wrap">
+              <canvas class="color-wheel" id="cw-gain" width="90" height="90"></canvas>
+              <span>Gain</span>
+            </div>
+          </div>
+          <div class="insp-section-header" style="margin-top:12px">Curves</div>
+          <div class="curves-tabs">
+            <button class="curve-tab active" data-curve="rgb">RGB</button>
+            <button class="curve-tab" data-curve="r" style="color:#ff6b6b">R</button>
+            <button class="curve-tab" data-curve="g" style="color:#51cf66">G</button>
+            <button class="curve-tab" data-curve="b" style="color:#74c0fc">B</button>
+            <button class="curve-tab" data-curve="luma">Luma</button>
+          </div>
+          <canvas id="curves-canvas" width="240" height="160"></canvas>
+          <div class="insp-section-header" style="margin-top:12px">Adjustments</div>
+          <div class="adj-sliders">
+            <div class="prop-row"><label>Temp</label><input type="range" class="prop-slider" id="adj-temp" min="-100" max="100" value="0"/><span class="prop-val" id="adj-temp-val">0</span></div>
+            <div class="prop-row"><label>Tint</label><input type="range" class="prop-slider" id="adj-tint" min="-100" max="100" value="0"/><span class="prop-val" id="adj-tint-val">0</span></div>
+            <div class="prop-row"><label>Shadows</label><input type="range" class="prop-slider" id="adj-shadows" min="-100" max="100" value="0"/><span class="prop-val" id="adj-shadows-val">0</span></div>
+            <div class="prop-row"><label>Highlights</label><input type="range" class="prop-slider" id="adj-highlights" min="-100" max="100" value="0"/><span class="prop-val" id="adj-highlights-val">0</span></div>
+            <div class="prop-row"><label>Vibrance</label><input type="range" class="prop-slider" id="adj-vibrance" min="-100" max="100" value="0"/><span class="prop-val" id="adj-vibrance-val">0</span></div>
+          </div>
+          <div class="insp-section-header" style="margin-top:12px">Scopes</div>
+          <div class="scopes-tabs">
+            <button class="scope-tab active" data-scope="histogram">Histogram</button>
+            <button class="scope-tab" data-scope="waveform">Waveform</button>
+          </div>
+          <canvas id="scope-canvas" width="240" height="80"></canvas>
+          <div class="lut-row">
+            <label>LUT</label>
+            <select id="lut-select">
+              <option value="">None</option>
+              <option value="fuji">Fuji 400H</option>
+              <option value="kodak">Kodak Vision3</option>
+              <option value="cinema">Cinema Teal</option>
+              <option value="arctic">Arctic Blue</option>
+              <option value="golden">Golden Hour</option>
+            </select>
+            <button class="btn-ghost-sm" id="btn-load-lut">Load .cube</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audio Mix Inspector -->
+      <div class="panel-tab-content" id="insp-audio-mix">
+        <div class="audio-mix-panel">
+          <div class="insp-section-header">Master</div>
+          <div class="audio-meter-row">
+            <div class="audio-meter" id="master-meter-l"></div>
+            <div class="audio-meter" id="master-meter-r"></div>
+          </div>
+          <div class="insp-section-header" style="margin-top:10px">Tracks</div>
+          <div id="audio-track-mixers"></div>
+          <div class="insp-section-header" style="margin-top:10px">Audio Effects</div>
+          <div class="audio-efx-list">
+            <div class="audio-efx-item">
+              <span>EQ</span>
+              <label class="toggle"><input type="checkbox" id="efx-eq"/><span class="toggle-knob"></span></label>
+            </div>
+            <div class="audio-efx-item">
+              <span>Reverb</span>
+              <label class="toggle"><input type="checkbox" id="efx-reverb"/><span class="toggle-knob"></span></label>
+            </div>
+            <div class="audio-efx-item">
+              <span>Echo</span>
+              <label class="toggle"><input type="checkbox" id="efx-echo"/><span class="toggle-knob"></span></label>
+            </div>
+            <div class="audio-efx-item">
+              <span>Compressor</span>
+              <label class="toggle"><input type="checkbox" id="efx-comp"/><span class="toggle-knob"></span></label>
+            </div>
+            <div class="audio-efx-item">
+              <span>Noise Gate</span>
+              <label class="toggle"><input type="checkbox" id="efx-gate"/><span class="toggle-knob"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text Inspector -->
+      <div class="panel-tab-content" id="insp-text">
+        <div class="text-panel">
+          <button class="btn-primary full-width" id="btn-add-text">+ Add Text Overlay</button>
+          <div class="insp-section-header" style="margin-top:12px">Text Properties</div>
+          <div id="text-props-empty" class="insp-no-clip" style="height:60px">
+            <p>Add or select a text layer</p>
+          </div>
+          <div id="text-props" style="display:none">
+            <div class="prop-row full">
+              <textarea id="text-content" placeholder="Enter text…" rows="3"></textarea>
+            </div>
+            <div class="prop-row">
+              <label>Font</label>
+              <select id="text-font">
+                <option>Inter</option><option>Outfit</option><option>Arial</option>
+                <option>Georgia</option><option>Impact</option><option>Courier New</option>
+              </select>
+            </div>
+            <div class="prop-row">
+              <label>Size</label>
+              <input type="range" class="prop-slider" id="text-size" min="8" max="200" value="48"/>
+              <span class="prop-val" id="text-size-val">48</span>
+            </div>
+            <div class="prop-row">
+              <label>Color</label>
+              <input type="color" id="text-color" value="#ffffff"/>
+            </div>
+            <div class="prop-row">
+              <label>BG</label>
+              <input type="color" id="text-bg-color" value="#000000"/>
+              <label class="toggle"><input type="checkbox" id="text-bg-on"/><span class="toggle-knob"></span></label>
+            </div>
+            <div class="prop-row">
+              <label>Opacity</label>
+              <input type="range" class="prop-slider" id="text-opacity" min="0" max="100" value="100"/>
+              <span class="prop-val" id="text-opacity-val">100%</span>
+            </div>
+            <div class="insp-section-header">Animation</div>
+            <div class="text-anim-grid">
+              <div class="text-anim-btn active" data-anim="none">None</div>
+              <div class="text-anim-btn" data-anim="fade">Fade</div>
+              <div class="text-anim-btn" data-anim="slide-up">Slide Up</div>
+              <div class="text-anim-btn" data-anim="slide-left">Slide Left</div>
+              <div class="text-anim-btn" data-anim="typewriter">Typewriter</div>
+              <div class="text-anim-btn" data-anim="bounce">Bounce</div>
+              <div class="text-anim-btn" data-anim="glitch">Glitch</div>
+              <div class="text-anim-btn" data-anim="zoom">Zoom</div>
+            </div>
+            <div class="insp-section-header">Preset Styles</div>
+            <div class="text-preset-list">
+              <div class="text-preset" data-preset="lower-third">Lower Third</div>
+              <div class="text-preset" data-preset="title">Full Title</div>
+              <div class="text-preset" data-preset="subtitle">Subtitle</div>
+              <div class="text-preset" data-preset="caption">Caption</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== CHROMA KEY & BG REMOVAL PANEL ===== -->
+      <div class="panel-tab-content" id="insp-chroma">
+        <div class="ck-panel">
+
+          <!-- ---- CHROMA KEY SECTION ---- -->
+          <div class="ck-section-card">
+            <div class="ck-section-title">
+              <span>🟢 Chroma Key</span>
+              <label class="toggle" title="Enable Chroma Key">
+                <input type="checkbox" id="ck-enable"/>
+                <span class="toggle-knob"></span>
+              </label>
+            </div>
+            <p class="ck-desc">Remove a solid background color (green screen, blue screen, etc.)</p>
+
+            <div id="ck-controls" class="ck-controls-body">
+              <!-- Key Color -->
+              <div class="ck-color-row">
+                <div class="ck-color-swatch-wrap">
+                  <div class="ck-color-swatch" id="ck-color-swatch" style="background:#00b140"></div>
+                  <input type="color" id="ck-color-input" value="#00b140" title="Key Color"/>
+                </div>
+                <button class="ck-eyedropper" id="ck-eyedropper" title="Sample color from preview">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14l-8-8-9 9 3 3 2-2 2 2-3 3 3 3 9-9-2-1zM10 4l3 3"/></svg>
+                  Eyedropper
+                </button>
+              </div>
+
+              <!-- Preset Colors -->
+              <div class="ck-presets-label">Quick Presets</div>
+              <div class="ck-presets-row">
+                <div class="ck-preset" data-color="#00b140" style="background:#00b140" title="Green Screen">G</div>
+                <div class="ck-preset" data-color="#0047ab" style="background:#0047ab" title="Blue Screen">B</div>
+                <div class="ck-preset" data-color="#ff0000" style="background:#ff0000" title="Red">R</div>
+                <div class="ck-preset" data-color="#ffffff" style="background:#ffffff;color:#000" title="White">W</div>
+                <div class="ck-preset" data-color="#000000" style="background:#000000" title="Black">K</div>
+                <div class="ck-preset" data-color="#4fc3f7" style="background:#4fc3f7;color:#000" title="Cyan">C</div>
+              </div>
+
+              <!-- Sliders -->
+              <div class="prop-row">
+                <label>Tolerance</label>
+                <input type="range" class="prop-slider" id="ck-tolerance" min="0" max="200" value="80"/>
+                <span class="prop-val" id="ck-tolerance-val">80</span>
+              </div>
+              <div class="prop-row">
+                <label>Softness</label>
+                <input type="range" class="prop-slider" id="ck-softness" min="0" max="80" value="20"/>
+                <span class="prop-val" id="ck-softness-val">20</span>
+              </div>
+              <div class="prop-row">
+                <label>Spill Supp.</label>
+                <input type="range" class="prop-slider" id="ck-spill" min="0" max="100" value="40"/>
+                <span class="prop-val" id="ck-spill-val">40%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ---- BG REMOVAL SECTION ---- -->
+          <div class="ck-section-card" style="margin-top:10px">
+            <div class="ck-section-title">
+              <span>✂️ BG Remover</span>
+              <label class="toggle" title="Enable Smart BG Removal">
+                <input type="checkbox" id="bgr-enable"/>
+                <span class="toggle-knob"></span>
+              </label>
+            </div>
+            <p class="ck-desc">Auto-detect & remove background using edge detection + flood fill</p>
+
+            <div id="bgr-controls" class="ck-controls-body">
+              <div class="ck-action-row">
+                <button class="ck-eyedropper" id="bgr-eyedropper" title="Click to sample background color">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                  Sample BG Color
+                </button>
+                <button class="btn-ghost-sm" id="bgr-clear-samples">Clear Samples</button>
+              </div>
+              <div class="prop-row">
+                <label>Tolerance</label>
+                <input type="range" class="prop-slider" id="bgr-tolerance" min="0" max="120" value="30"/>
+                <span class="prop-val" id="bgr-tolerance-val">30</span>
+              </div>
+              <div class="prop-row">
+                <label>Softness</label>
+                <input type="range" class="prop-slider" id="bgr-softness" min="0" max="30" value="8"/>
+                <span class="prop-val" id="bgr-softness-val">8</span>
+              </div>
+              <div class="prop-row">
+                <label>Refine</label>
+                <input type="range" class="prop-slider" id="bgr-iterations" min="1" max="3" value="2" step="1"/>
+                <span class="prop-val" id="bgr-iterations-val">2x</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ---- BACKGROUND REPLACEMENT ---- -->
+          <div class="ck-section-card" style="margin-top:10px">
+            <div class="ck-section-title"><span>🖼️ Background</span></div>
+            <p class="ck-desc">Choose what replaces the removed background. <b>🎬 Track</b> = use Video 2 from timeline as the new background.</p>
+
+            <div class="bg-type-row">
+              <button class="bg-type-btn active" data-bg="track" title="Use lower timeline video track as background">🎬 Track</button>
+              <button class="bg-type-btn" data-bg="transparent" title="Transparent (checkerboard)">⬛ None</button>
+              <button class="bg-type-btn" data-bg="color" title="Solid Color">🎨 Color</button>
+              <button class="bg-type-btn" data-bg="gradient" title="Gradient">🌈 Grad</button>
+              <button class="bg-type-btn" data-bg="image" title="Image">🖼️ Image</button>
+              <button class="bg-type-btn" data-bg="animated-gradient" title="Animated Gradient">✨ Anim</button>
+            </div>
+
+            <!-- Solid Color options -->
+            <div class="bg-option-section" data-for="color" style="display:none">
+              <label>Color</label>
+              <input type="color" id="bg-solid-color" value="#1a1a2e"/>
+            </div>
+
+            <!-- Gradient options -->
+            <div class="bg-option-section" data-for="gradient" style="display:none; flex-direction:column; gap:6px">
+              <div class="prop-row">
+                <label>Color 1</label>
+                <input type="color" id="bg-grad-color1" value="#7c3aed"/>
+                <label>Color 2</label>
+                <input type="color" id="bg-grad-color2" value="#06b6d4"/>
+              </div>
+              <div class="prop-row">
+                <label>Angle</label>
+                <input type="range" class="prop-slider" id="bg-grad-angle" min="0" max="360" value="135"/>
+                <span class="prop-val" id="bg-grad-angle-val">135°</span>
+              </div>
+            </div>
+
+            <!-- Animated gradient -->
+            <div class="bg-option-section" data-for="animated-gradient" style="display:none; flex-direction:column; gap:6px">
+              <div class="prop-row">
+                <label>Color 1</label>
+                <input type="color" id="bg-anim-color1" value="#7c3aed"/>
+                <label>Color 2</label>
+                <input type="color" id="bg-anim-color2" value="#06b6d4"/>
+              </div>
+            </div>
+
+            <!-- Image options -->
+            <div class="bg-option-section" data-for="image" style="display:none">
+              <button class="btn-ghost-sm" id="btn-load-bg-image">📁 Choose Image…</button>
+              <input type="file" id="bg-image-file" accept="image/*" style="display:none"/>
+            </div>
+
+            <!-- Track info -->
+            <div class="bg-option-section" data-for="track">
+              <span class="ck-desc">Renders the video on the <b>lower track</b> (Video 2) as background. Make sure Video 2 clip overlaps in the timeline.</span>
+            </div>
+
+            <!-- Transparent info -->
+            <div class="bg-option-section" data-for="transparent" style="display:none">
+              <span class="ck-desc">Transparent — great for compositing over other clips</span>
+            </div>
+
+            <!-- Animated gradient info -->
+            <div class="bg-option-section" data-for="animated-gradient" style="display:none">
+              <span class="ck-desc">Smoothly animated gradient background</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- ===== END CHROMA KEY PANEL ===== -->
+
+    </aside>
+  </main>
+
+  <!-- RESIZE HANDLE (horizontal, workspace/timeline) -->
+  <div class="resize-handle-h" id="resize-workspace-timeline"></div>
+
+  <!-- TIMELINE SECTION -->
+  <section id="panel-timeline">
+    <div id="timeline-header">
+      <div class="tl-controls-left">
+        <button class="icon-btn" id="btn-tl-add-video-track" title="Add Video Track">
+          <svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          V
+        </button>
+        <button class="icon-btn" id="btn-tl-add-audio-track" title="Add Audio Track">
+          <svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          A
+        </button>
+      </div>
+      <div class="tl-zoom-ctrl">
+        <button class="icon-btn" id="btn-tl-zoom-out">−</button>
+        <input type="range" id="tl-zoom-slider" min="1" max="100" value="20" />
+        <button class="icon-btn" id="btn-tl-zoom-in">+</button>
+      </div>
+      <div class="tl-controls-right">
+        <button class="icon-btn" id="btn-tl-ripple" title="Ripple Delete" data-active="false">Ripple</button>
+        <button class="icon-btn" id="btn-tl-snap" title="Snap to Grid" data-active="true">Snap</button>
+        <button class="icon-btn" id="btn-tl-link" title="Link A/V" data-active="true">Link</button>
+      </div>
+    </div>
+    <div id="timeline-body">
+      <div id="timeline-track-labels">
+        <!-- Track labels injected by JS -->
+      </div>
+      <div id="timeline-scroll-area">
+        <div id="timeline-ruler"></div>
+        <div id="timeline-tracks-container">
+          <!-- Tracks injected by JS -->
+        </div>
+        <div id="timeline-playhead">
+          <div id="playhead-line"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /#app -->
+
+<!-- EXPORT MODAL -->
+<div id="export-modal" class="modal" style="display:none">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Export Video</h2>
+      <button class="modal-close" id="btn-close-export">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="export-grid">
+        <div class="export-col">
+          <div class="export-section">
+            <label class="export-label">Format</label>
+            <div class="btn-group" id="export-format-group">
+              <button class="btn-opt active" data-val="mp4">MP4</button>
+              <button class="btn-opt" data-val="webm">WebM</button>
+              <button class="btn-opt" data-val="mov">MOV</button>
+              <button class="btn-opt" data-val="gif">GIF</button>
+            </div>
+          </div>
+          <div class="export-section">
+            <label class="export-label">Resolution</label>
+            <div class="btn-group" id="export-res-group">
+              <button class="btn-opt" data-val="3840x2160">4K</button>
+              <button class="btn-opt active" data-val="1920x1080">1080p</button>
+              <button class="btn-opt" data-val="1280x720">720p</button>
+              <button class="btn-opt" data-val="854x480">480p</button>
+            </div>
+          </div>
+          <div class="export-section">
+            <label class="export-label">Frame Rate</label>
+            <div class="btn-group" id="export-fps-group">
+              <button class="btn-opt" data-val="24">24</button>
+              <button class="btn-opt" data-val="25">25</button>
+              <button class="btn-opt active" data-val="30">30</button>
+              <button class="btn-opt" data-val="60">60</button>
+            </div>
+          </div>
+          <div class="export-section">
+            <label class="export-label">Preset</label>
+            <select id="export-preset-select">
+              <option value="custom">Custom</option>
+              <option value="youtube">YouTube 1080p</option>
+              <option value="youtube4k">YouTube 4K</option>
+              <option value="instagram">Instagram Square</option>
+              <option value="tiktok">TikTok Vertical</option>
+              <option value="twitter">Twitter / X</option>
+            </select>
+          </div>
+        </div>
+        <div class="export-col">
+          <div class="export-section">
+            <label class="export-label">Quality / Bitrate</label>
+            <input type="range" id="export-quality" min="1" max="10" value="8"/>
+            <div class="export-quality-labels"><span>Low</span><span>Medium</span><span>High</span></div>
+          </div>
+          <div class="export-section">
+            <label class="export-label">Filename</label>
+            <input type="text" id="export-filename" value="my-video" class="text-input"/>
+          </div>
+          <div id="export-progress-section" style="display:none">
+            <label class="export-label">Progress</label>
+            <div class="export-progress-bar">
+              <div id="export-progress-fill"></div>
+            </div>
+            <span id="export-progress-text">Preparing…</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" id="btn-cancel-export">Cancel</button>
+      <button class="btn-primary" id="btn-start-export">
+        <svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 1v9M4 6l4 4 4-4M2 12v2h12v-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        Export
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- KEYBOARD SHORTCUTS HELP -->
+<div id="shortcuts-modal" class="modal" style="display:none">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box modal-sm">
+    <div class="modal-header">
+      <h2>Keyboard Shortcuts</h2>
+      <button class="modal-close" id="btn-close-shortcuts">×</button>
+    </div>
+    <div class="modal-body shortcuts-body">
+      <div class="shortcut-row"><kbd>Space</kbd><span>Play / Pause</span></div>
+      <div class="shortcut-row"><kbd>J</kbd><span>Rewind</span></div>
+      <div class="shortcut-row"><kbd>K</kbd><span>Stop</span></div>
+      <div class="shortcut-row"><kbd>L</kbd><span>Fast Forward</span></div>
+      <div class="shortcut-row"><kbd>S</kbd><span>Split / Razor</span></div>
+      <div class="shortcut-row"><kbd>V</kbd><span>Select Tool</span></div>
+      <div class="shortcut-row"><kbd>T</kbd><span>Text Tool</span></div>
+      <div class="shortcut-row"><kbd>I</kbd><span>Set In Point</span></div>
+      <div class="shortcut-row"><kbd>O</kbd><span>Set Out Point</span></div>
+      <div class="shortcut-row"><kbd>Del</kbd><span>Delete Clip</span></div>
+      <div class="shortcut-row"><kbd>⌘Z</kbd><span>Undo</span></div>
+      <div class="shortcut-row"><kbd>⌘Y</kbd><span>Redo</span></div>
+      <div class="shortcut-row"><kbd>+/-</kbd><span>Zoom Timeline</span></div>
+      <div class="shortcut-row"><kbd>F</kbd><span>Fullscreen Preview</span></div>
+      <div class="shortcut-row"><kbd>?</kbd><span>This Help</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST NOTIFICATIONS -->
+<div id="toast-container"></div>
+
+<!-- CONTEXT MENU -->
+<div id="context-menu" style="display:none">
+  <div class="ctx-item" id="ctx-split">Split Clip</div>
+  <div class="ctx-item" id="ctx-delete">Delete</div>
+  <div class="ctx-item" id="ctx-duplicate">Duplicate</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" id="ctx-speed">Change Speed…</div>
+  <div class="ctx-item" id="ctx-effects">Add Effect…</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" id="ctx-properties">Properties</div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="modules/keyboard.js"></script>
+<script src="modules/assets.js"></script>
+<script src="modules/effects.js"></script>
+<script src="modules/transitions.js"></script>
+<script src="modules/colorgrade.js"></script>
+<script src="modules/audio.js"></script>
+<script src="modules/text.js"></script>
+<script src="modules/chromakey.js"></script>
+<script src="modules/player.js"></script>
+<script src="modules/timeline.js"></script>
+<script src="modules/export.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
